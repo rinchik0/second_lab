@@ -3,6 +3,9 @@ package org.example;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MathematicsTest {
@@ -73,6 +76,18 @@ class MathematicsTest {
         boolean actual = math.isSyntaxCorrect();
 
         boolean expected = true;
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void conversionToPostfixNotation() {
+        Mathematics math = Mathematics.getInstance();
+        math.setExpression("(1/2)-12+3*(5+(6+8*(7+10)))+50");
+
+        List<String> actual = math.conversionToPostfixNotation();
+
+        List<String> expected = List.of("1", "2", "/", "12", "-", "3", "5", "6", "8", "7",
+                "10", "+", "*", "+", "+", "*", "+", "50", "+");
 
         Assertions.assertEquals(expected, actual);
     }
