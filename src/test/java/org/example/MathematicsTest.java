@@ -3,10 +3,7 @@ package org.example;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MathematicsTest {
     @Test
@@ -88,6 +85,17 @@ class MathematicsTest {
 
         List<String> expected = List.of("1", "2", "/", "12", "-", "3", "5", "6", "8", "7",
                 "10", "+", "*", "+", "+", "*", "+", "50", "+");
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void calculate() {
+        Mathematics math = Mathematics.getInstance();
+        math.setExpression("14+4*(2-5)");
+
+        int actual = math.calculate();
+
+        int expected = 2;
 
         Assertions.assertEquals(expected, actual);
     }

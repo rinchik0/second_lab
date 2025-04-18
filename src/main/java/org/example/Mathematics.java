@@ -125,7 +125,26 @@ public class Mathematics {
             postfixNotation.add(Character.toString(operations.pop()));
         return postfixNotation;
     }
-    public double calculate() {
-
+    public Integer calculate() {
+        if (isExpressionCorrect()) {
+            List<String> elements = conversionToPostfixNotation();
+            Stack<Integer> numbers = new Stack<Integer>();
+            for (String element : elements) {
+                try {
+                    numbers.push(Integer.parseInt(element));
+                } catch (NumberFormatException e) {
+                    int a = numbers.pop();
+                    int b = numbers.pop();
+                    switch (element) {
+                        case "+" -> numbers.push(b + a);
+                        case "-" -> numbers.push(b - a);
+                        case "/" -> numbers.push(b / a);
+                        case "*" -> numbers.push(b * a);
+                    }
+                }
+            }
+            return numbers.pop();
+        }
+        return null;
     }
 }
