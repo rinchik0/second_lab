@@ -7,9 +7,6 @@ target/
 *.iml
 *.ipr
 
-### Project ###
-src/main/java/org/rinchik/Main.java
-
 ### Для моих целей не нужно, но в качестве универсальности проекта оставляю ###
 ### Eclipse ###
 .apt_generated
