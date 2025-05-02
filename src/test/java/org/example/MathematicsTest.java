@@ -4,141 +4,17 @@ import org.example.Inputs.CustomInput;
 import org.example.Inputs.EmptyInput;
 import org.example.Outputs.EmptyOutput;
 import org.example.Outputs.TestOutput;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 class MathematicsTest {
-    @AfterEach
-    void tearDown() {
-        Mathematics.reset();
-    }
-    @Test
-    void setGetExpressionFirst() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-
-        String expected = "1.0+2.0";
-
-        math.setExpression(expected);
-
-        String actual = math.getExpression();
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void setGetExpressionSecond() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-
-        String expected = "1.0+2.0";
-
-        math.setExpression(expected);
-
-        expected += "+3.0";
-
-        String actual = math.getExpression();
-
-        Assertions.assertNotEquals(expected, actual);
-    }
-    @Test
-    void isBracketsCorrectFirst() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1+2)-1+2+3*(5+(6+8*(7+10)))");
-
-        boolean actual = math.isBracketsCorrect();
-
-        boolean expected = true;
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void isBracketsCorrectSecond() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1+2)-1+2+3*(5+(6+8*(7+10))");
-
-        boolean actual = math.isBracketsCorrect();
-
-        boolean expected = false;
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void isSyntaxCorrectFirst() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("4#5");
-
-        boolean actual = math.isSyntaxCorrect();
-
-        boolean expected = false;
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void isSyntaxCorrectSecond() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1/2)-1+2log12+3z*(5y+(6+8*(7sin(x)+10))");
-
-        boolean actual = math.isSyntaxCorrect();
-
-        boolean expected = true;
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void parseString() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("abs(-14)+abc*(2-x*cos(0)-sqrt(49))+6^3");
-
-        List<String> expected = List.of("abs", "(", "~", "14.0", ")", "+", "abc", "*", "(", "2.0", "-", "x", "*",
-                "cos", "(", "0.0", ")", "-", "sqrt", "(", "49.0", ")", ")", "+", "6.0", "^", "3.0");
-
-        List<String> actual = math.parseString();
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void conversionToPostfixNotation() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1/2)-12+3*(5+(6+8*(7+10)))+50");
-
-        List<String> actual = math.conversionToPostfixNotation();
-
-        List<String> expected = List.of("1.0", "2.0", "/", "12.0", "-", "3.0", "5.0", "6.0", "8.0", "7.0",
-                "10.0", "+", "*", "+", "+", "*", "+", "50.0", "+");
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void conversionToPostfixNotationWithVariables() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1/2)-12+x*(5+(6+8*(var+10)))+50");
-
-        List<String> actual = math.conversionToPostfixNotation();
-
-        List<String> expected = List.of("1.0", "2.0", "/", "12.0", "-", "x", "5.0", "6.0", "8.0", "var",
-                "10.0", "+", "*", "+", "+", "*", "+", "50.0", "+");
-
-        Assertions.assertEquals(expected, actual);
-    }
-    @Test
-    void conversionToPostfixNotationWithFunction() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("(1/2)-12+x*(sin(30+60)+(6+8*(var+10)))+50");
-
-        List<String> actual = math.conversionToPostfixNotation();
-
-        List<String> expected = List.of("1.0", "2.0", "/", "12.0", "-", "x", "30.0", "60.0", "+", "sin", "6.0",
-                "8.0", "var", "10.0", "+", "*", "+", "+", "*", "+", "50.0", "+");
-
-        Assertions.assertEquals(expected, actual);
-    }
     @Test
     void calculate() {
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
-        math.setExpression("14+4*(2-5)");
+        Mathematics math = new Mathematics(new EmptyInput(), new EmptyOutput());
 
-        double actual = math.calculate();
+        double actual = math.calculate("14+4*(2-5)");
 
         double expected = 14 + 4 * (2 - 5);
 
@@ -147,10 +23,9 @@ class MathematicsTest {
     @Test
     void calculateWithVariables() {
         CustomInput input = new CustomInput();
-        Mathematics math = Mathematics.getInstance(input, new EmptyOutput());
-        math.setExpression("14+abc*(2-x)");
+        Mathematics math = new Mathematics(input, new EmptyOutput());
 
-        double actual = math.calculate();
+        double actual = math.calculate("14+abc*(2-x)");
 
         double expected = 14 + input.repeatDouble() * (2 - input.repeatDouble());
 
@@ -159,10 +34,9 @@ class MathematicsTest {
     @Test
     void calculateWithFunction() {
         CustomInput input = new CustomInput();
-        Mathematics math = Mathematics.getInstance(input, new EmptyOutput());
-        math.setExpression("abs(-14)+abc*(2-x*cos(0)-sqrt(49))");
+        Mathematics math = new Mathematics(input, new EmptyOutput());
 
-        double actual = math.calculate();
+        double actual = math.calculate("abs(-14)+abc*(2-x*cos(0)-sqrt(49))");
 
         double expected = Math.abs(-14) + input.repeatDouble() * (2 - input.repeatDouble() * Math.cos(0) - Math.sqrt(49));
 
@@ -190,12 +64,10 @@ class MathematicsTest {
         expressions.put("arctg(1)+arccos(0.5)", Math.atan(1) + Math.acos(0.5));
         expressions.put("(5+3)/(2*sqrt(4))", 2.0);
         expressions.put("sin(0)+cos(0)+tg(0)", 1.0);
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), new EmptyOutput());
+        Mathematics math = new Mathematics(new EmptyInput(), new EmptyOutput());
 
-        for (String example : expressions.keySet()) {
-            math.setExpression(example);
-            actual.add(math.calculate());
-        }
+        for (String example : expressions.keySet())
+            actual.add(math.calculate(example));
 
         List<Double> expected = new ArrayList<>(expressions.values());
 
@@ -206,12 +78,10 @@ class MathematicsTest {
         CustomInput input = new CustomInput();
         List<Double> actual = new ArrayList<>();
         List<String> expressions = List.of("a+b*c", "sqrt(x)-abs(y)", "sin(alpha)");
-        Mathematics math = Mathematics.getInstance(input, new EmptyOutput());
+        Mathematics math = new Mathematics(input, new EmptyOutput());
 
-        for (String example : expressions) {
-            math.setExpression(example);
-            actual.add(math.calculate());
-        }
+        for (String example : expressions)
+            actual.add(math.calculate(example));
 
         List<Double> expected = List.of(input.repeatDouble() + input.repeatDouble() * input.repeatDouble(),
                 Math.sqrt(input.repeatDouble()) - Math.abs(input.repeatDouble()), Math.sin(input.repeatDouble()));
@@ -223,13 +93,11 @@ class MathematicsTest {
         TestOutput output = new TestOutput();
         List<String> expressions = List.of("sqrt(-1)", "5/0", "arcsin(2)", "arccos(99)", "2+(3*4", "4#5", "2+x");
 
-        Mathematics math = Mathematics.getInstance(new EmptyInput(), output);
+        Mathematics math = new Mathematics(new EmptyInput(), output);
 
         boolean result = true;
-        for (String example : expressions) {
-            math.setExpression(example);
-            result = result & (math.calculate() == null);
-        }
+        for (String example : expressions)
+            result = result & (math.calculate(example) == null);
         List<String> actual = output.getOutputMessages();
 
         List<String> expected = List.of("Error! Number under the root is less than 0!", "Error! Division by zero!",

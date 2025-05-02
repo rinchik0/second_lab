@@ -4,6 +4,9 @@ import org.example.Interfaces.Input;
 
 import java.util.ArrayList;
 
+/**
+ * Класс тестового ввода, то есть генерирующий значения и сохраняющий все, что должно было считаться.
+ */
 public class CustomInput implements Input {
     private final ArrayList<Double> numbers;
     private int current;
@@ -21,6 +24,11 @@ public class CustomInput implements Input {
         numbers.add(current);
         return current;
     }
+
+    /**
+     * Метод, позволяющий повторить по отдельным вызовам ввод заново (тех же данных, что уже были использованы).
+     * @return очередное значение
+     */
     public Double repeatDouble() {
         current++;
         return numbers.get(current);
